@@ -77,6 +77,7 @@ fs.readFile('moulay_amayoud.txt', 'utf8',  function(err, data){
 
  //<<<<<<<<<< Chiffrement Asymmetric >>>>>>>>>
 // =======>Generation des clés Publique et Privé
+/*
 let  { generateKeyPair } = require('crypto');
  generateKeyPair('rsa', {
   modulusLength: 4096,
@@ -108,4 +109,72 @@ let  { generateKeyPair } = require('crypto');
         console.log('Something went wrong....');
     }
 });
+*/
 
+//<<<<<<<<<<<<<<<<<<<< Chiffrement Aymmetric / dechiffrement Asymmetric d'un fichier texte  >>>>>>>>>
+/*
+fs.readFile('moulay_amayoud.txt', 'utf8',  function(err, data){
+    let  { generateKeyPair } = require('crypto');
+    generateKeyPair('rsa', {
+     modulusLength: 4096,
+     publicKeyEncoding: {
+       type: 'spki',
+       format: 'pem'
+     },
+     privateKeyEncoding: {
+       type: 'pkcs8',
+       format: 'pem'
+     }
+   }, (err, publicKey, privateKey) => {
+     // Handle errors and use the generated key pair.
+     // Encrypt with the public key...
+       jsEncrypt.setPublicKey(publicKey);
+       var encrypted = jsEncrypt.encrypt(data);
+       console.log("Encrypted data : ");
+       console.log(encrypted);
+       // Decrypt with the private key...
+       jsEncrypt.setPrivateKey(privateKey);
+       var uncrypted = jsEncrypt.decrypt(encrypted);
+       console.log("uncrypted data : ");
+       console.log(uncrypted);
+       // Now a simple check to see if the round-trip worked.
+       if (uncrypted == data) {
+       console.log('It works!!!');
+       }
+       else {
+           console.log('Something went wrong....');
+       }
+   });
+});
+
+*/
+//>>>>>>>>>>>>>>>>>> MD5 hashing
+
+var crypto = require('crypto');
+var Data = 'Amayoud Moulay ICCN3';
+var hash = crypto.createHash('md5').update(Data).digest('hex');
+console.log("Hashing with md5 : " , hash);
+console.log();
+
+// Singing 
+
+let  { generateKeyPair } = require('crypto');
+ generateKeyPair('rsa', {
+  modulusLength: 4096,
+  publicKeyEncoding: {
+    type: 'spki',
+    format: 'pem'
+  },
+  privateKeyEncoding: {
+    type: 'pkcs8',
+    format: 'pem'
+  }
+}, (err, publicKey, privateKey) => {
+  var key = privateKey.toString('ascii');
+  
+  var sign = crypto.createSign('RSA-SHA256');
+  sign.update("INPT ICCN");  // 
+  var sig = sign.sign(key, 'hex');
+  console.log("Singing");
+  console.log(sig);
+});
